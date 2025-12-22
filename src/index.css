@@ -1,0 +1,266 @@
+@import "tailwindcss";
+
+/* Define color variables */
+@theme {
+  /* Gold palette */
+  --color-gold: #D4AF37;
+  --color-gold-light: #F4E4A6;
+  --color-gold-dark: #B8860B;
+  --color-gold-accent: #FFD700;
+  
+  /* Black palette */
+  --color-black: #000000;
+  --color-black-light: #1A1A1A;
+  --color-black-mid: #2D2D2D;
+  --color-black-dark: #0A0A0A;
+  
+  /* White & Gray palette */
+  --color-white: #FFFFFF;
+  --color-white-off: #F8F9FA;
+  --color-gray-light: #E5E7EB;
+  --color-gray: #6B7280;
+  --color-gray-dark: #374151;
+  
+  /* Service accent colors */
+  --color-cyber: #FF6B6B;
+  --color-tech: #4ECDC4;
+  --color-creative: #9B5DE5;
+  --color-web: #00BBF9;
+  --color-wifi: #F15BB5;
+  --color-database: #7209B7;
+  --color-social: #4361EE;
+  
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* Base styles */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-black);
+  color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom utility classes */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+}
+
+.glow-effect {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+@import "tailwindcss";
+
+@theme {
+  /* Premium Gold, Black & White Palette */
+  --color-gold: #D4AF37;
+  --color-gold-light: #F4E4A6;
+  --color-gold-dark: #B8860B;
+  --color-gold-accent: #FFD700;
+  
+  --color-black: #000000;
+  --color-black-light: #1A1A1A;
+  --color-black-mid: #2D2D2D;
+  --color-black-dark: #0A0A0A;
+  
+  --color-white: #FFFFFF;
+  --color-white-off: #F8F9FA;
+  --color-gray-light: #E5E7EB;
+  --color-gray: #6B7280;
+  --color-gray-dark: #374151;
+  
+  /* Semantic colors */
+  --color-primary: var(--color-gold);
+  --color-primary-light: var(--color-gold-light);
+  --color-primary-dark: var(--color-gold-dark);
+  
+  --color-background: var(--color-black);
+  --color-foreground: var(--color-white);
+  --color-card: var(--color-black-light);
+  --color-border: var(--color-black-mid);
+  
+  /* Accent colors for services */
+  --color-cyber: #FF6B6B;
+  --color-tech: #4ECDC4;
+  --color-creative: #9B5DE5;
+  --color-web: #00BBF9;
+  --color-wifi: #F15BB5;
+  --color-database: #7209B7;
+  --color-social: #4361EE;
+  
+  /* Font settings - Using Inter like shadcn/ui */
+  --font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  
+  /* Typography scale like shadcn/ui */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.75rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 1;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
+  --text-8xl: 6rem;
+  --text-8xl--line-height: 1;
+  --text-9xl: 8rem;
+  --text-9xl--line-height: 1;
+}
+
+/* Import Inter font with all weights - EXACTLY like shadcn/ui */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* Inter font fallback */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local("Arial");
+  ascent-override: 90.20%;
+  descent-override: 22.48%;
+  line-gap-override: 0.00%;
+  size-adjust: 107.40%;
+}
+
+/* Base styles - Matching shadcn/ui typography */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-black);
+  color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Headings - Using Inter weights like shadcn */
+h1 {
+  font-size: var(--text-4xl);
+  line-height: var(--text-4xl--line-height);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  line-height: var(--text-3xl--line-height);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+  font-weight: 600;
+}
+
+h4 {
+  font-size: var(--text-xl);
+  line-height: var(--text-xl--line-height);
+  font-weight: 600;
+}
+
+/* Paragraph styles */
+p {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  font-weight: 400;
+}
+
+/* Small text */
+.text-sm {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 400;
+}
+
+/* Large text */
+.text-lg {
+  font-size: var(--text-lg);
+  line-height: var(--text-lg--line-height);
+  font-weight: 400;
+}
+
+/* Custom utilities */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gold-border {
+  border-image: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%) 1;
+}
+
+.glow-effect {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+}
+
+/* Code/mono text */
+code, pre {
+  font-family: var(--font-mono);
+}
+
+/* Selection color */
+::selection {
+  background-color: rgba(212, 175, 55, 0.3);
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
