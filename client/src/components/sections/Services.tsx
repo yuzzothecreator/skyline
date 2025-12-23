@@ -1,9 +1,11 @@
-import { Shield, Code, Wifi, Palette, Database, Cpu, Smartphone, Lock, Cloud, Server, Terminal, Zap } from 'lucide-react'
+import { useState } from 'react'
+import { Shield, Code, Wifi, Palette, Database, Cpu, Smartphone, Cloud, Server, Terminal, Zap, Calendar, Clock } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
+import BookingModal from '@/components/modals/BookingModal'
 
-const services = [
+const servicesData = [
   {
     id: 'cybersecurity',
     title: 'Cybersecurity & Penetration Testing',
@@ -11,7 +13,9 @@ const services = [
     icon: Shield,
     color: 'cyber',
     features: ['Penetration Testing', 'Vulnerability Assessment', 'Security Audits', 'Incident Response'],
-    price: 'Starting at $2,499'
+    price: 'Starting at $2,499',
+    estimatedTime: '2-4 weeks',
+    popular: true
   },
   {
     id: 'web-dev',
@@ -20,7 +24,9 @@ const services = [
     icon: Code,
     color: 'web',
     features: ['Custom Websites', 'E-commerce Solutions', 'Web Applications', 'UI/UX Design'],
-    price: 'From $3,999'
+    price: 'From $3,999',
+    estimatedTime: '4-8 weeks',
+    popular: true
   },
   {
     id: 'wifi',
@@ -29,7 +35,9 @@ const services = [
     icon: Wifi,
     color: 'wifi',
     features: ['WiFi Setup', 'Network Security', 'Captive Portals', 'Performance Optimization'],
-    price: 'Starting at $1,299'
+    price: 'Starting at $1,299',
+    estimatedTime: '1-2 weeks',
+    popular: false
   },
   {
     id: 'design',
@@ -38,7 +46,9 @@ const services = [
     icon: Palette,
     color: 'creative',
     features: ['Logo Design', 'Brand Identity', 'Marketing Materials', 'UI/UX Design'],
-    price: 'Project-based'
+    price: 'Project-based',
+    estimatedTime: '2-3 weeks',
+    popular: false
   },
   {
     id: 'database',
@@ -47,7 +57,9 @@ const services = [
     icon: Database,
     color: 'database',
     features: ['Database Design', 'Performance Tuning', 'Data Migration', 'Backup Solutions'],
-    price: 'From $1,999/month'
+    price: 'From $1,999/month',
+    estimatedTime: 'Ongoing',
+    popular: true
   },
   {
     id: 'it-support',
@@ -56,7 +68,9 @@ const services = [
     icon: Cpu,
     color: 'tech',
     features: ['24/7 Support', 'Remote Assistance', 'Hardware Repair', 'Software Installation'],
-    price: 'From $999/month'
+    price: 'From $999/month',
+    estimatedTime: '24/7 Support',
+    popular: true
   },
   {
     id: 'mobile',
@@ -65,7 +79,9 @@ const services = [
     icon: Smartphone,
     color: 'social',
     features: ['iOS Apps', 'Android Apps', 'Cross-platform', 'App Maintenance'],
-    price: 'From $4,999'
+    price: 'From $4,999',
+    estimatedTime: '8-12 weeks',
+    popular: false
   },
   {
     id: 'cloud',
@@ -74,170 +90,224 @@ const services = [
     icon: Cloud,
     color: 'gold',
     features: ['Cloud Migration', 'Infrastructure Setup', 'Security', 'Cost Optimization'],
-    price: 'Custom Quote'
+    price: 'Custom Quote',
+    estimatedTime: '2-6 weeks',
+    popular: false
   }
 ]
 
 export default function Services() {
+  const [selectedService, setSelectedService] = useState<typeof servicesData[0] | null>(null)
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+
+  const handleBookService = (service: typeof servicesData[0]) => {
+    setSelectedService(service)
+    setIsBookingModalOpen(true)
+  }
+
   return (
-    <section id="services" className="py-20 bg-black">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-black-light border border-gold/30 rounded-full px-4 py-2 mb-6">
-            <Zap className="h-4 w-4 text-gold" />
-            <span className="text-sm text-gold font-medium tracking-wide">OUR SERVICES</span>
+    <>
+      <section id="services" className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-card border border-primary/30 rounded-full px-4 py-2 mb-6">
+              <Zap className="h-4 w-4 text-primary" />
+              <span className="text-sm text-primary font-medium tracking-wide">OUR SERVICES</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
+              Premium <span className="gradient-text">Tech Solutions</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Book a free consultation for any service below.
+            </p>
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-            Premium <span className="gradient-text">Tech Solutions</span>
-          </h2>
-          <p className="text-lg text-gray-light max-w-3xl mx-auto">
-            Comprehensive technology services designed for modern enterprises, delivered with gold-standard excellence.
-          </p>
-        </div>
 
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {services.map((service) => {
-            const Icon = service.icon
-            return (
-              <Card 
-                key={service.id} 
-                className="bg-black-light border border-gold/10 hover:border-gold/30 transition-all group hover:glow-effect"
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className={`w-12 h-12 rounded-lg bg-${service.color}/10 flex items-center justify-center mb-4`}>
-                      <Icon className={`h-6 w-6 text-${service.color}`} />
+          {/* Services Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {servicesData.map((service) => {
+              const Icon = service.icon
+              return (
+                <Card 
+                  key={service.id} 
+                  className="bg-card border border-primary/10 hover:border-primary/30 transition-all group hover:shadow-lg relative"
+                >
+                  {service.popular && (
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                      <div className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
+                        MOST POPULAR
+                      </div>
                     </div>
-                    <span className="text-xs font-medium text-gold bg-gold/10 px-2 py-1 rounded">
-                      {service.price}
-                    </span>
-                  </div>
-                  <CardTitle className="text-xl text-white group-hover:text-gold transition-colors">
-                    {service.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray mb-4">
-                    {service.description}
-                  </CardDescription>
-                  <div className="space-y-2">
-                    {service.features.map((feature, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-gold" />
-                        <span className="text-sm text-gray-light">{feature}</span>
+                  )}
+                  
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className={`w-12 h-12 rounded-lg bg-${service.color}/10 flex items-center justify-center mb-4`}>
+                        <Icon className={`h-6 w-6 text-${service.color}`} />
                       </div>
-                    ))}
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    className="w-full mt-6 border-gold text-gold hover:bg-gold/10"
-                  >
-                    Learn More
-                  </Button>
-                </CardContent>
-              </Card>
-            )
-          })}
-        </div>
-
-        {/* Featured Services Tabs */}
-        <div className="mt-20">
-          <h3 className="text-2xl font-bold text-white text-center mb-8">
-            Most <span className="gradient-text">Popular</span> Services
-          </h3>
-          
-          <Tabs defaultValue="cybersecurity" className="w-full">
-            <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2 bg-black-light border border-gold/20 p-1 rounded-lg">
-              <TabsTrigger 
-                value="cybersecurity" 
-                className="data-[state=active]:bg-gold data-[state=active]:text-black"
-              >
-                Cybersecurity
-              </TabsTrigger>
-              <TabsTrigger 
-                value="web-dev" 
-                className="data-[state=active]:bg-gold data-[state=active]:text-black"
-              >
-                Web Dev
-              </TabsTrigger>
-              <TabsTrigger 
-                value="it-support" 
-                className="data-[state=active]:bg-gold data-[state=active]:text-black"
-              >
-                IT Support
-              </TabsTrigger>
-              <TabsTrigger 
-                value="database" 
-                className="data-[state=active]:bg-gold data-[state=active]:text-black"
-              >
-                Database
-              </TabsTrigger>
-            </TabsList>
-            
-            {services.slice(0, 4).map((service) => (
-              <TabsContent key={service.id} value={service.id} className="mt-6">
-                <Card className="bg-black-light border border-gold/20">
-                  <CardContent className="p-8">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
-                      <div>
-                        <div className="flex items-center gap-4 mb-6">
-                          <div className={`w-16 h-16 rounded-xl bg-${service.color}/10 flex items-center justify-center`}>
-                            <service.icon className={`h-8 w-8 text-${service.color}`} />
-                          </div>
-                          <div>
-                            <h4 className="text-2xl font-bold text-white">{service.title}</h4>
-                            <p className="text-gold font-medium">{service.price}</p>
-                          </div>
+                      <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">
+                        {service.price}
+                      </span>
+                    </div>
+                    <CardTitle className="text-xl text-foreground group-hover:text-primary transition-colors">
+                      {service.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-muted-foreground mb-4">
+                      {service.description}
+                    </CardDescription>
+                    <div className="space-y-2 mb-6">
+                      {service.features.map((feature, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                          <span className="text-sm text-muted-foreground">{feature}</span>
                         </div>
-                        <p className="text-gray-light mb-6">{service.description}</p>
-                        <div className="flex gap-4">
-                          <Button className="gold-gradient-bg text-black">
-                            Book Service
-                          </Button>
-                          <Button variant="outline" className="border-gold text-gold">
-                            View Case Studies
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="bg-black/50 rounded-xl p-6">
-                        <h5 className="text-white font-semibold mb-4">Key Features:</h5>
-                        <div className="space-y-3">
-                          {service.features.map((feature, index) => (
-                            <div key={index} className="flex items-center gap-3">
-                              <div className="w-2 h-2 rounded-full bg-gold" />
-                              <span className="text-gray-light">{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1 border-primary text-primary hover:bg-primary/10"
+                        onClick={() => handleBookService(service)}
+                      >
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Book Now
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="flex-1"
+                        onClick={() => {
+                          // Scroll to service details
+                          document.getElementById(service.id)?.scrollIntoView({ behavior: 'smooth' })
+                        }}
+                      >
+                        Learn More
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
-            ))}
-          </Tabs>
-        </div>
+              )
+            })}
+          </div>
 
-        {/* CTA */}
-        <div className="text-center mt-16 p-8 rounded-2xl bg-black-light border border-gold/20">
-          <h3 className="text-2xl font-bold text-white mb-4">
-            Ready to Transform Your Business?
-          </h3>
-          <p className="text-gray-light mb-6 max-w-2xl mx-auto">
-            Schedule a free consultation with our experts and discover how our premium tech solutions can drive your success.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="gold-gradient-bg text-black">
+          {/* Quick Booking CTA */}
+          <div className="text-center p-8 rounded-2xl bg-card border border-primary/20 mb-12">
+            <h3 className="text-2xl font-bold text-foreground mb-4">
+              Not Sure Which Service You Need?
+            </h3>
+            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+              Schedule a free 30-minute consultation with our experts to discuss your needs 
+              and get personalized recommendations.
+            </p>
+            <Button 
+              size="lg" 
+              className="gold-gradient-bg text-primary-foreground"
+              onClick={() => handleBookService({
+                id: 'consultation',
+                title: 'Free Consultation',
+                description: '30-minute discovery call with our experts',
+                icon: Calendar,
+                color: 'gold',
+                features: ['Needs Assessment', 'Solution Recommendations', 'Project Planning', 'Cost Estimation'],
+                price: 'FREE',
+                estimatedTime: '30 minutes',
+                popular: false
+              })}
+            >
+              <Calendar className="mr-2 h-5 w-5" />
               Book Free Consultation
             </Button>
-            <Button size="lg" variant="outline" className="border-gold text-gold">
-              View All Services
-            </Button>
+          </div>
+
+          {/* Service Details Tabs */}
+          <div className="mt-20">
+            <h3 className="text-2xl font-bold text-foreground text-center mb-8">
+              Service <span className="gradient-text">Details</span>
+            </h3>
+            
+            <Tabs defaultValue="cybersecurity" className="w-full">
+              <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2 bg-card border border-primary/20 p-1 rounded-lg">
+                {servicesData.slice(0, 4).map((service) => (
+                  <TabsTrigger 
+                    key={service.id}
+                    value={service.id}
+                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  >
+                    {service.title.split(' ')[0]}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              
+              {servicesData.slice(0, 4).map((service) => {
+                const Icon = service.icon
+                return (
+                  <TabsContent key={service.id} value={service.id} className="mt-6" id={service.id}>
+                    <Card className="bg-card border border-primary/20">
+                      <CardContent className="p-8">
+                        <div className="grid md:grid-cols-2 gap-8 items-center">
+                          <div>
+                            <div className="flex items-center gap-4 mb-6">
+                              <div className={`w-16 h-16 rounded-xl bg-${service.color}/10 flex items-center justify-center`}>
+                                <Icon className={`h-8 w-8 text-${service.color}`} />
+                              </div>
+                              <div>
+                                <h4 className="text-2xl font-bold text-foreground">{service.title}</h4>
+                                <p className="text-primary font-medium">{service.price}</p>
+                                <p className="text-sm text-muted-foreground">Est. Time: {service.estimatedTime}</p>
+                              </div>
+                            </div>
+                            <p className="text-muted-foreground mb-6">{service.description}</p>
+                            <div className="flex gap-4">
+                              <Button 
+                                className="gold-gradient-bg text-primary-foreground"
+                                onClick={() => handleBookService(service)}
+                              >
+                                <Calendar className="mr-2 h-4 w-4" />
+                                Book This Service
+                              </Button>
+                              <Button variant="outline" className="border-primary text-primary">
+                                View Case Studies
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="bg-background/50 rounded-xl p-6">
+                            <h5 className="text-foreground font-semibold mb-4">What's Included:</h5>
+                            <div className="space-y-3">
+                              {service.features.map((feature, index) => (
+                                <div key={index} className="flex items-center gap-3">
+                                  <div className="w-2 h-2 rounded-full bg-primary" />
+                                  <span className="text-muted-foreground">{feature}</span>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="mt-6 pt-6 border-t border-primary/10">
+                              <h6 className="text-foreground font-semibold mb-2">Typical Timeline:</h6>
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <Clock className="h-4 w-4" />
+                                <span>{service.estimatedTime}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                )
+              })}
+            </Tabs>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Booking Modal */}
+      {selectedService && (
+        <BookingModal
+          isOpen={isBookingModalOpen}
+          onClose={() => setIsBookingModalOpen(false)}
+          service={selectedService}
+        />
+      )}
+    </>
   )
 }
