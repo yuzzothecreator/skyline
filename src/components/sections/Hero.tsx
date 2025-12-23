@@ -112,9 +112,17 @@
 import { ArrowRight, Shield, Zap, Globe, Cpu, Sparkles, Terminal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { motion } from 'framer-motion'
+import { fadeInUp, staggerContainer } from '@/lib/animations'
 
 export default function Hero() {
   return (
+    <motion.div 
+  variants={staggerContainer}
+  initial="initial"
+  animate="animate"
+>
+  <motion.div variants={fadeInUp}>
     <section className="relative overflow-hidden bg-black">
       {/* Gold gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-black-light to-black-dark" />
@@ -224,5 +232,8 @@ export default function Hero() {
         </div>
       </div>
     </section>
+  </motion.div>
+</motion.div>
+    
   )
 }
