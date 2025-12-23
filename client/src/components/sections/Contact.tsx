@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Mail, Phone, MapPin, Send, Clock, CheckCircle, AlertCircle } from 'lucide-react'
+import { Mail, Phone, MapPin, Send, Clock, CheckCircle, AlertCircle, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -22,8 +22,8 @@ const services = [
   'Other'
 ]
 
-// API URL - adjust based on your backend
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+// Safe API URL with fallback
+const API_URL = (import.meta.env?.VITE_API_URL as string) || 'http://localhost:5000/api'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -53,37 +53,60 @@ export default function Contact() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  
-  if (!validateForm()) {
-    toast.error('Please fill all required fields correctly')
-    return
-  }
-
-  setIsLoading(true)
-  
-  try {
-    const response = await fetch(`${API_URL}/contact`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData)
-    })
-
-    if (response.ok) {
-      toast.success('Message sent successfully! We\'ll contact you soon.')
-      resetForm()
-    } else {
-      // Fallback to mailto link
-      throw new Error('API failed, using fallback')
-    }
-  } catch (error) {
-    console.error('API error, using email fallback:', error)
+    e.preventDefault()
     
-    // Create mailto link
-    const subject = `Contact Form: ${formData.service || 'General Inquiry'}`
-    const body = `
+    if (!validateForm()) {
+      toast.error('Please fill all required fields correctly')
+      return
+    }
+
+    setIsLoading(true)
+    
+    try {
+      const response = await fetch(`${API_URL}/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        toast.success(
+          <div>
+            <p className="font-semibold">Message sent successfully!</p>
+            <p className="text-sm">We'll contact you within 24 hours.</p>
+            <p className="text-xs mt-1">Reference ID: {data.data?.id || 'N/A'}</p>
+          </div>,
+          { duration: 5000 }
+        )
+        
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          company: '',
+          service: '',
+          message: ''
+        })
+        setErrors({})
+        
+        // Show success details in console
+        console.log('✅ Contact form submitted successfully!')
+        console.log('📋 Submission Details:', data.data)
+        
+      } else {
+        throw new Error(data.error || 'Failed to send message')
+      }
+    } catch (error) {
+      console.error('❌ Form submission error:', error)
+      
+      // Fallback: Create mailto link
+      const subject = `Contact Form: ${formData.service || 'General Inquiry'}`
+      const body = `
 Name: ${formData.name}
 Email: ${formData.email}
 Phone: ${formData.phone || 'Not provided'}
@@ -92,24 +115,53 @@ Service: ${formData.service || 'Not specified'}
 
 Message:
 ${formData.message}
-    `.trim()
-    
-    const mailtoLink = `mailto:info@skylineinnovation.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    
-    // Open email client
-    window.location.href = mailtoLink
-    
-    toast.success('Opened email client. Please send your message.')
-    resetForm()
-  } finally {
-    setIsLoading(false)
+      `.trim()
+      
+      const mailtoLink = `mailto:info@skylineinnovation.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+      
+      toast.custom((t) => (
+        <div className="bg-card border border-primary/20 p-4 rounded-lg shadow-lg">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-semibold text-foreground">Backend Connection Failed</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Please send your message directly via email:
+              </p>
+              <div className="flex gap-2 mt-3">
+                <Button 
+                  size="sm" 
+                  onClick={() => {
+                    window.location.href = mailtoLink
+                    toast.dismiss(t.id)
+                  }}
+                  className="gold-gradient-bg text-primary-foreground"
+                >
+                  Open Email Client
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => {
+                    navigator.clipboard.writeText(body)
+                    toast.success('Copied to clipboard!')
+                  }}
+                >
+                  Copy Message
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ), { duration: 10000 })
+    } finally {
+      setIsLoading(false)
+    }
   }
-}
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
     }
@@ -119,6 +171,27 @@ ${formData.message}
     setFormData(prev => ({ ...prev, service: value }))
   }
 
+  const downloadContacts = async () => {
+    try {
+      const response = await fetch(`${API_URL}/admin/contacts`)
+      const contacts = await response.json()
+      
+      const blob = new Blob([JSON.stringify(contacts, null, 2)], { type: 'application/json' })
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `skyline-contacts-${new Date().toISOString().split('T')[0]}.json`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+      
+      toast.success('Contacts downloaded!')
+    } catch (error) {
+      toast.error('Failed to download contacts')
+    }
+  }
+
   return (
     <section id="contact" className="py-20 bg-background">
       <Toaster 
@@ -126,21 +199,9 @@ ${formData.message}
         toastOptions={{
           duration: 4000,
           style: {
-            background: '#1A1A1A',
-            color: '#fff',
-            border: '1px solid #D4AF37',
-          },
-          success: {
-            iconTheme: {
-              primary: '#D4AF37',
-              secondary: '#1A1A1A',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#FF6B6B',
-              secondary: '#1A1A1A',
-            },
+            background: 'hsl(var(--card))',
+            color: 'hsl(var(--foreground))',
+            border: '1px solid hsl(var(--primary))',
           },
         }}
       />
@@ -156,9 +217,23 @@ ${formData.message}
             Let's <span className="gradient-text">Build Together</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Ready to transform your business? Contact us today for a free consultation 
-            with our technology experts.
+            Ready to transform your business? Contact us today for a free consultation.
           </p>
+          
+          {/* Admin download button (for testing) */}
+          {import.meta.env?.DEV && (
+            <div className="mt-4">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={downloadContacts}
+                className="border-primary/30 text-primary hover:bg-primary/10"
+              >
+                <Download className="h-3 w-3 mr-2" />
+                Download Contacts (Dev)
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -168,7 +243,7 @@ ${formData.message}
               <CardHeader>
                 <CardTitle className="text-foreground">Contact Information</CardTitle>
                 <CardDescription className="text-muted-foreground">
-                  Get in touch through any of these channels
+                  Multiple ways to reach us
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -177,7 +252,7 @@ ${formData.message}
                     <Phone className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-medium text-foreground">Phone</div>
+                    <div className="font-medium text-foreground">Phone & WhatsApp</div>
                     <div className="text-muted-foreground">+1 (555) 123-4567</div>
                     <div className="text-sm text-muted-foreground">24/7 Support Available</div>
                   </div>
@@ -189,7 +264,12 @@ ${formData.message}
                   </div>
                   <div>
                     <div className="font-medium text-foreground">Email</div>
-                    <div className="text-muted-foreground">info@skylineinnovation.com</div>
+                    <a 
+                      href="mailto:info@skylineinnovation.com" 
+                      className="text-primary hover:underline block"
+                    >
+                      info@skylineinnovation.com
+                    </a>
                     <div className="text-sm text-muted-foreground">Response within 2 hours</div>
                   </div>
                 </div>
@@ -199,7 +279,7 @@ ${formData.message}
                     <MapPin className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-medium text-foreground">Location</div>
+                    <div className="font-medium text-foreground">Office Location</div>
                     <div className="text-muted-foreground">123 Innovation Drive</div>
                     <div className="text-muted-foreground">Tech Valley, CA 94000</div>
                   </div>
@@ -218,17 +298,38 @@ ${formData.message}
               </CardContent>
             </Card>
 
-            {/* Quick Response */}
+            {/* Direct Contact */}
             <Card className="bg-card border border-primary/10">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <CheckCircle className="h-5 w-5 text-primary" />
-                  <div className="font-medium text-foreground">Quick Response Guarantee</div>
+                  <div className="font-medium text-foreground">Prefer Direct Contact?</div>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  We guarantee a response within 2 hours during business hours. 
-                  Your inquiry is our priority.
+                <p className="text-sm text-muted-foreground mb-4">
+                  You can also reach us directly:
                 </p>
+                <div className="space-y-2">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start border-primary/20 text-primary"
+                    asChild
+                  >
+                    <a href="mailto:info@skylineinnovation.com">
+                      <Mail className="h-4 w-4 mr-2" />
+                      Send Direct Email
+                    </a>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start border-primary/20 text-primary"
+                    asChild
+                  >
+                    <a href="tel:+15551234567">
+                      <Phone className="h-4 w-4 mr-2" />
+                      Call Us Directly
+                    </a>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -256,6 +357,7 @@ ${formData.message}
                         onChange={handleChange}
                         placeholder="John Smith"
                         className={`bg-background border-primary/20 text-foreground ${errors.name ? 'border-red-500' : ''}`}
+                        disabled={isLoading}
                       />
                       {errors.name && (
                         <div className="flex items-center gap-1 text-red-500 text-sm">
@@ -264,6 +366,7 @@ ${formData.message}
                         </div>
                       )}
                     </div>
+
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-foreground">
                         Email Address *
@@ -276,6 +379,7 @@ ${formData.message}
                         onChange={handleChange}
                         placeholder="john@company.com"
                         className={`bg-background border-primary/20 text-foreground ${errors.email ? 'border-red-500' : ''}`}
+                        disabled={isLoading}
                       />
                       {errors.email && (
                         <div className="flex items-center gap-1 text-red-500 text-sm">
@@ -296,8 +400,10 @@ ${formData.message}
                         onChange={handleChange}
                         placeholder="+1 (555) 123-4567"
                         className="bg-background border-primary/20 text-foreground"
+                        disabled={isLoading}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label htmlFor="company" className="text-foreground">Company</Label>
                       <Input
@@ -307,13 +413,14 @@ ${formData.message}
                         onChange={handleChange}
                         placeholder="Your Company Inc."
                         className="bg-background border-primary/20 text-foreground"
+                        disabled={isLoading}
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="service" className="text-foreground">Service Interest</Label>
-                    <Select onValueChange={handleSelectChange} value={formData.service}>
+                    <Select onValueChange={handleSelectChange} value={formData.service} disabled={isLoading}>
                       <SelectTrigger className="bg-background border-primary/20 text-foreground">
                         <SelectValue placeholder="Select a service" />
                       </SelectTrigger>
@@ -322,7 +429,7 @@ ${formData.message}
                           <SelectItem 
                             key={service} 
                             value={service.toLowerCase()}
-                            className="text-foreground hover:bg-primary/10 focus:bg-primary/10"
+                            className="text-foreground hover:bg-primary/10"
                           >
                             {service}
                           </SelectItem>
@@ -343,6 +450,7 @@ ${formData.message}
                       placeholder="Tell us about your project or requirements..."
                       rows={4}
                       className={`bg-background border-primary/20 text-foreground min-h-[120px] ${errors.message ? 'border-red-500' : ''}`}
+                      disabled={isLoading}
                     />
                     {errors.message && (
                       <div className="flex items-center gap-1 text-red-500 text-sm">
@@ -354,13 +462,13 @@ ${formData.message}
 
                   <Button 
                     type="submit" 
-                    className="w-full gold-gradient-bg text-primary-foreground font-semibold"
+                    className="w-full gold-gradient-bg text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
                     disabled={isLoading}
                   >
                     {isLoading ? (
                       <>
                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent mr-2" />
-                        Sending...
+                        Processing...
                       </>
                     ) : (
                       <>
@@ -370,9 +478,14 @@ ${formData.message}
                     )}
                   </Button>
 
-                  <p className="text-xs text-muted-foreground text-center">
-                    By submitting this form, you agree to our Privacy Policy and Terms of Service.
-                  </p>
+                  <div className="text-center space-y-2">
+                    <p className="text-xs text-muted-foreground">
+                      By submitting this form, you agree to our Privacy Policy.
+                    </p>
+                    <p className="text-xs text-primary">
+                      <span className="font-semibold">Note:</span> Forms are saved to our secure database.
+                    </p>
+                  </div>
                 </form>
               </CardContent>
             </Card>
@@ -381,8 +494,4 @@ ${formData.message}
       </div>
     </section>
   )
-}
-
-function resetForm() {
-  throw new Error('Function not implemented.')
 }

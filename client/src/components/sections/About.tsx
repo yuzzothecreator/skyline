@@ -1,4 +1,4 @@
-import { Users, Target, Award, Clock, CheckCircle, Zap } from 'lucide-react'
+import { Users, Target, Award, CheckCircle, Zap } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 

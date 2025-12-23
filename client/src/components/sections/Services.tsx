@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Shield, Code, Wifi, Palette, Database, Cpu, Smartphone, Cloud, Server, Terminal, Zap, Calendar, Clock } from 'lucide-react'
+import { Shield, Code, Wifi, Palette, Database, Cpu, Smartphone, Cloud, Zap, Calendar, Clock } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'

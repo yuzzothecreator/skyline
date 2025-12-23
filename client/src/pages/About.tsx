@@ -1,5 +1,5 @@
 import AboutSection from '@/components/sections/About'
-import { Users, Target, Award, Clock } from 'lucide-react'
+import { Target, Award } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 
 export default function AboutPage() {

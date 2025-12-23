@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, Calendar, Clock, User, Mail, Phone, Briefcase, MessageSquare, CheckCircle, AlertCircle, ChevronDown } from 'lucide-react'
+import { X, Calendar, Clock, User, Briefcase, MessageSquare, CheckCircle, AlertCircle, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
