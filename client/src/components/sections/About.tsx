@@ -26,12 +26,12 @@ const values = [
 ]
 
 const team = [
-  { name: 'Alex Morgan', role: 'Cybersecurity Lead', expertise: '10+ years' },
-  { name: 'Taylor Kim', role: 'Web Development Director', expertise: '8+ years' },
-  { name: 'Jordan Patel', role: 'IT Infrastructure Manager', expertise: '12+ years' },
-  { name: 'Casey Zhang', role: 'Creative Director', expertise: '7+ years' },
-  { name: 'Riley Thompson', role: 'Database Architect', expertise: '9+ years' },
-  { name: 'Morgan Lee', role: 'Cloud Solutions Expert', expertise: '6+ years' }
+  { name: 'Mr Benny ', role: 'Cybersecurity Lead', expertise: '10+ years' },
+  { name: 'Yusuph shabani', role: 'Web Development Director', expertise: '5+ years' },
+  { name: 'Allan Mahundi', role: 'IT Infrastructure Manager', expertise: '5+ years' },
+  { name: 'Baraka April', role: 'Creative Director', expertise: '6+ years' },
+  { name: 'Yusuph shabani', role: 'Database Architect', expertise: '2+ years' },
+  { name: 'Allan Mahundi', role: 'Cloud Solutions Expert', expertise: '3+ years' }
 ]
 
 export default function About() {

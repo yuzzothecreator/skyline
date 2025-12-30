@@ -13,7 +13,7 @@ const servicesData = [
     icon: Shield,
     color: 'cyber',
     features: ['Penetration Testing', 'Vulnerability Assessment', 'Security Audits', 'Incident Response'],
-    price: 'Starting at $2,499',
+    price: 'Starting at 250,000 TSH',
     estimatedTime: '2-4 weeks',
     popular: true
   },
@@ -24,7 +24,7 @@ const servicesData = [
     icon: Code,
     color: 'web',
     features: ['Custom Websites', 'E-commerce Solutions', 'Web Applications', 'UI/UX Design'],
-    price: 'From $3,999',
+    price: 'From 299,900 TSH',
     estimatedTime: '4-8 weeks',
     popular: true
   },
@@ -35,7 +35,7 @@ const servicesData = [
     icon: Wifi,
     color: 'wifi',
     features: ['WiFi Setup', 'Network Security', 'Captive Portals', 'Performance Optimization'],
-    price: 'Starting at $1,299',
+    price: 'Starting at 59,900 TSH',
     estimatedTime: '1-2 weeks',
     popular: false
   },
@@ -57,7 +57,7 @@ const servicesData = [
     icon: Database,
     color: 'database',
     features: ['Database Design', 'Performance Tuning', 'Data Migration', 'Backup Solutions'],
-    price: 'From $1,999/month',
+    price: 'From 35,000 TSH/month',
     estimatedTime: 'Ongoing',
     popular: true
   },
@@ -68,7 +68,7 @@ const servicesData = [
     icon: Cpu,
     color: 'tech',
     features: ['24/7 Support', 'Remote Assistance', 'Hardware Repair', 'Software Installation'],
-    price: 'From $999/month',
+    price: 'From 25,000 TSH/month',
     estimatedTime: '24/7 Support',
     popular: true
   },
@@ -79,7 +79,7 @@ const servicesData = [
     icon: Smartphone,
     color: 'social',
     features: ['iOS Apps', 'Android Apps', 'Cross-platform', 'App Maintenance'],
-    price: 'From $4,999',
+    price: 'From 350,000 TSH',
     estimatedTime: '8-12 weeks',
     popular: false
   },

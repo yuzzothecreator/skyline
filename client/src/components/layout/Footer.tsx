@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Mail, Heart } from 'lucide-react'
+import { Mail, Heart, Facebook, Instagram,  } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const Footer = () => {
@@ -76,8 +76,8 @@ const Footer = () => {
           </div>
           <div className="flex justify-center items-center gap-2 mt-2 text-xs text-gray">
             <span>Made with</span>
-            <Heart className="h-3 w-3 text-gold" />
-            <span>by the Skyline Team</span>
+            <Heart className="h-3 w-3 text-gold"  />
+            <span>by the <span className='text-gold text-x' >Yuzzo The Creator</span></span>
           </div>
         </div>
       </div>

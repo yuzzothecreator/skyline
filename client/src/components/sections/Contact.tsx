@@ -253,7 +253,7 @@ ${formData.message}
                   </div>
                   <div>
                     <div className="font-medium text-foreground">Phone & WhatsApp</div>
-                    <div className="text-muted-foreground">+1 (555) 123-4567</div>
+                    <div className="text-muted-foreground">+255-697-488-875</div>
                     <div className="text-sm text-muted-foreground">24/7 Support Available</div>
                   </div>
                 </div>
@@ -265,10 +265,10 @@ ${formData.message}
                   <div>
                     <div className="font-medium text-foreground">Email</div>
                     <a 
-                      href="mailto:info@skylineinnovation.com" 
+                      href="mailto:skyline-africa5@gmail.com" 
                       className="text-primary hover:underline block"
                     >
-                      info@skylineinnovation.com
+                      skylineafrica5@gmail.com
                     </a>
                     <div className="text-sm text-muted-foreground">Response within 2 hours</div>
                   </div>
@@ -280,8 +280,8 @@ ${formData.message}
                   </div>
                   <div>
                     <div className="font-medium text-foreground">Office Location</div>
-                    <div className="text-muted-foreground">123 Innovation Drive</div>
-                    <div className="text-muted-foreground">Tech Valley, CA 94000</div>
+                    <div className="text-muted-foreground"> Arusha, Tanzania</div>
+                    <div className="text-muted-foreground">Njiro, Nanenane</div>
                   </div>
                 </div>
 
