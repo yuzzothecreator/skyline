@@ -128,11 +128,11 @@ export default function Testimonials() {
             Trusted by Industry Leaders
           </h3>
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-50">
-            <div className="text-2xl font-bold text-white">FIN TECH</div>
+            <div className="text-2xl font-bold text-white"> YUZZO <span className='text-purple-500' ><br /> The Creator</span></div>
             <div className="text-2xl font-bold text-white">HEALTHCARE</div>
-            <div className="text-2xl font-bold text-white">RETAIL</div>
-            <div className="text-2xl font-bold text-white">EDUCATION</div>
-            <div className="text-2xl font-bold text-white">GOVERNMENT</div>
+            <div className="text-2xl font-bold text-white">CAREER NA MIMI</div>
+            <div className="text-2xl font-bold text-white">IAA</div>
+            <div className="text-2xl font-bold text-white">SKYLINE</div>
           </div>
         </div>
       </div>
